@@ -33,13 +33,22 @@
 #include <AppKit/NSView.h>
 #include <AppKit/NSWindow.h>
 
-#import <DesktopKit/NXTAlert.h>
-#import <DesktopKit/NXTOpenPanel.h>
-
 #import "Document.h"
 #import "MultiplePageView.h"
 #import "TextFinder.h"
 #import "Preferences.h"
+
+@implementation NSTextView (LinkPanel)
+- (void) orderFrontLinkPanel:(id)sender
+{
+  NSAlert* alert = [[NSAlert alloc]init];
+  [alert setMessageText:@"ssss"];
+  [alert addButtonWithTitle:@"OK"];
+  [alert runModal];
+  [alert release];
+  NSLog(@"link panel");
+}
+@end
 
 @implementation Document
 
@@ -707,7 +716,7 @@ static BOOL hyphenationSupported(void)
 {
   if (isRichText && ([textStorage length] > 0))
     {
-      int choice = NXTRunAlertPanel (_(@"Make Plain Text"), 
+      int choice = NSRunAlertPanel (_(@"Make Plain Text"), 
                                     _(@"Convert document to plain text? This will lose fonts, colors, and other text attribute settings."), 
                                     _(@"OK"), _(@"Cancel"), nil);
       
@@ -755,7 +764,7 @@ static BOOL hyphenationSupported(void)
 {
   if (documentName) {
     NSString *fileName = [documentName lastPathComponent];
-    int choice = NXTRunAlertPanel(_(@"Revert"), 
+    int choice = NSRunAlertPanel(_(@"Revert"), 
                                  _(@"Revert to saved version of %@?"), 
                                  _(@"OK"),
                                  _(@"Cancel"),
@@ -763,7 +772,7 @@ static BOOL hyphenationSupported(void)
                                  fileName);
     if (choice == NSAlertDefaultReturn) {
       if (![self loadFromPath: documentName encoding: encodingIfPlainText]) {
-        NXTRunAlertPanel(_(@"Couldn't Revert"), 
+        NSRunAlertPanel(_(@"Couldn't Revert"), 
                         _(@"Couldn't revert to saved version of %@."), 
                         _(@"OK"),
                         nil,
@@ -797,9 +806,52 @@ static BOOL hyphenationSupported(void)
   [self saveDocument: NO];
 }
 
+
+- (void) chooseAndAttachFiles:(id)sender 
+{
+  NSOpenPanel *panel = [NSOpenPanel openPanel];
+  [panel setCanChooseDirectories:YES];
+  [panel setAllowsMultipleSelection:YES];
+  if ([panel runModal]) {
+    NSArray *paths = [panel filenames];
+    NSTextView *textView = [self firstTextView];
+    NSInteger numberOfErrors = 0;
+    NSMutableAttributedString *attachments = [[NSMutableAttributedString alloc] init];
+          
+    for (NSString *path in paths) {
+      NSFileWrapper *wrapper = [[NSFileWrapper alloc] initWithPath:path];
+
+      if (wrapper) {
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:wrapper];
+        [attachments appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+        [wrapper release];
+        [attachment release];
+      } else {
+        NSLog(@"error adding: %@", path);
+        numberOfErrors++;
+      }
+    }
+          
+    if ([attachments length] > 0) {
+      if (!isRichText) {
+        [self setRichText:YES];
+        [self setDocumentEdited:YES];
+        [self setDocumentName:nil];
+      }
+
+      NSRange selectionRange = [textView selectedRange];
+      if ([textView shouldChangeTextInRange:selectionRange replacementString:[attachments string]]) {
+        [[textView textStorage] replaceCharactersInRange:selectionRange withAttributedString:attachments];
+        [textView didChangeText];
+      }
+    }
+    [attachments release];
+  }
+}
+
 + (void) openWithEncodingAccessory:(BOOL)flag
 {
-  NXTOpenPanel *panel = [NXTOpenPanel openPanel];
+  NSOpenPanel *panel = [NSOpenPanel openPanel];
 
   if (flag) {
     [panel setAccessoryView:
@@ -821,7 +873,7 @@ static BOOL hyphenationSupported(void)
         if (![Document openDocumentWithPath:filename encoding:flag ? [[encodingPopupButton selectedItem] tag] : UnknownStringEncoding])
           {
             NSString *alternate = (cnt + 1 == numFiles) ? nil : _(@"Abort");
-            unsigned choice = NXTRunAlertPanel(_(@"File system error"), 
+            unsigned choice = NSRunAlertPanel(_(@"File system error"), 
                                               _(@"Couldn't open file %@."), 
                                               _(@"OK"),
                                               alternate,
@@ -884,7 +936,7 @@ static BOOL hyphenationSupported(void)
 - (BOOL) canCloseDocument
 {
   if (isDocumentEdited) {
-    int result = NXTRunAlertPanel (
+    int result = NSRunAlertPanel (
                                   _(@"Close"),
                                   _(@"Document has been edited. Save?"),
                                   _(@"Save"),
@@ -955,7 +1007,7 @@ static BOOL hyphenationSupported(void)
         encodingForSaving = NSUTF8StringEncoding;
 
       if (haveToChangeType) {
-        NXTRunAlertPanel(_( @"Save Plain Text"), 
+        NSRunAlertPanel(_( @"Save Plain Text"), 
                         _(@"Document can no longer be saved using its original %@ encoding. Please choose another encoding (%@ is one possibility)."), 
                         _(@"OK"),
                         nil,
@@ -993,7 +1045,7 @@ static BOOL hyphenationSupported(void)
       return YES;
 
     } else {
-      NXTRunAlertPanel(@"Couldn't Save",
+      NSRunAlertPanel(@"Couldn't Save",
                       _(@"Couldn't save document as %@."),
                       _(@"OK"),
                       nil,
@@ -1014,7 +1066,7 @@ static BOOL hyphenationSupported(void)
                  oldName:(NSString *)oldName
              oldEncoding:(int)encoding
 {
-  NXTSavePanel	*panel = [NXTSavePanel savePanel];
+  NSSavePanel	*panel = [NSSavePanel savePanel];
 
   switch (encoding) {
   case RichTextStringEncoding:
@@ -1103,6 +1155,8 @@ doubleClickedOnCell: (id <NSTextAttachmentCell>)cell
 {
   NSString	*name = [[[cell attachment] fileWrapper] filename];
   BOOL		success = NO;
+
+  if (!name) name = [[[cell attachment] fileWrapper] preferredFilename];
 
   if (name && documentName && ![name isEqualToString: @""] && ![documentName isEqualToString:@""]) {
     NSString	*fullPath = [documentName stringByAppendingPathComponent:name];

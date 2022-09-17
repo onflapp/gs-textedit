@@ -13,7 +13,6 @@
 
 #import <Foundation/NSFileManager.h>
 #import <AppKit/NSApplication.h>
-#import <DesktopKit/NXTAlert.h>
 
 #import "Controller.h"
 #import "Document.h"
@@ -45,7 +44,7 @@
 
   if (needsSaving)
     {
-      int choice = NXTRunAlertPanel 
+      int choice = NSRunAlertPanel 
         (NSLocalizedString (@"Quit", @"Title of alert panel which comes up when user chooses Quit and there are unsaved documents."), 
          NSLocalizedString (@"You have unsaved documents.", @"Message in the alert panel which comes up when user chooses Quit and there are unsaved documents."), 
          NSLocalizedString (@"Review Unsaved", @"Choice (on a button) given to user which allows him/her to review all unsaved documents if he/she quits the application without saving them all first."), 

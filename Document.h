@@ -143,6 +143,7 @@ extern void SetUpEncodingPopupButton(NSPopUpButton *popup, int selectedEncoding,
 - (void) jumpToSelection: (id)sender;
 - (void) toggleRich: (id)sender;
 - (void) togglePageBreaks: (id)sender;
+- (void) chooseAndAttachFiles:(id)sender;
 /*
   action cover for [self printDocumentUsingPrintPanel:YES]
 */

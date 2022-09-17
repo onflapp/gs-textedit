@@ -15,11 +15,13 @@
     FirstResponder = {
 	Actions = (
 	    "addFontTrait:",
+	    "applicationShouldTerminate:",
+	    "chooseAndAttachFiles:",
 	    "enterSelection:",
 	    "findNext:",
 	    "findPrevious:",
 	    "jumpToSelection:",
-	    "applicationShouldTerminate:",
+	    "orderFrontLinkPanel:",
 	    "orderFrontFindPanel:",
 	    "orderFrontFontPanel:",
 	    "revert:",
