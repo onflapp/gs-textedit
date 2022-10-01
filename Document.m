@@ -55,10 +55,9 @@
 - (void)setupInitialTextViewSharedState
 {
   NSTextView *textView = [self firstTextView];
-	
   [textView setUsesFontPanel:YES];
   [textView setDelegate:self];
-  [self setRichText:[[Preferences objectForKey:RichText] boolValue]];
+  [self setRichText:![[Preferences objectForKey:RichText] boolValue]];
   [self setHyphenationFactor:0.0];
 }
 

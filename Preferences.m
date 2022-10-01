@@ -7,18 +7,6 @@
   You may freely copy, distribute and reuse the code in this example.
   NeXT disclaims any warranty of any kind, expressed or implied,
   as to its fitness for any particular use.
-
-  Preferences controller for Edit...
-
-  To add new defaults search for one of the existing keys. Some keys have
-  UI, others don't; use one similar to the one you're adding.
-
-  displayedValues is a mirror of the UI. These are committed by copying
-  these values to curValues.
-
-  This module allows for UI where there is or there isn't an OK button.
-  If you wish to have an OK button, connect OK to ok:, Revert to revert:,
-  and don't call commitDisplayedValues from the various action messages.
 */
 
 #import "Preferences.h"
@@ -76,8 +64,9 @@ static Preferences *sharedInstance = nil;
   else {
     [super init];
     curValues = [[[self class] preferencesFromDefaults] copy];
-    [self discardDisplayedValues];
+    displayedValues = [curValues mutableCopy];
     sharedInstance = self;
+
   }
   return sharedInstance;
 }
@@ -189,8 +178,6 @@ static void showFontInField(NSFont *font, NSTextField *field)
     [displayedValues setObject:[NSNumber numberWithInt:anInt]
                         forKey:WindowHeight];
   }
-
-  [self commitDisplayedValues];
 }
 
 /**** Font changing code ****/
@@ -224,7 +211,6 @@ static BOOL changingRTFFont = NO;
                         forKey:PlainTextFont];
     showFontInField ([displayedValues objectForKey: PlainTextFont], plainTextFontNameField);
   }
-  [self commitDisplayedValues];
 }
 
 /**** Commit/revert etc ****/
@@ -254,6 +240,7 @@ static BOOL changingRTFFont = NO;
 
 - (void)revertToDefault:(id)sender
 {
+  [curValues release];
   curValues = [defaultValues() copy];
   [self discardDisplayedValues];
 }
@@ -266,12 +253,12 @@ static BOOL changingRTFFont = NO;
 /**** Code to deal with defaults ****/
    
 #define getBoolDefault(name) \
-  {NSString *str = [defaults stringForKey:name]; \
-	  [dict setObject:str ? [NSNumber numberWithBool:[str hasPrefix:@"Y"]] : [defaultValues() objectForKey:name] forKey:name];}
+{id val = [defaults objectForKey:name]; \
+	  [dict setObject:val ? [NSNumber numberWithBool:[val boolValue]] : [defaultValues() objectForKey:name] forKey:name];}
 
 #define getIntDefault(name) \
-  {NSString *str = [defaults stringForKey:name]; \
-	  [dict setObject:str ? [NSNumber numberWithInt:[str intValue]] : [defaultValues() objectForKey:name] forKey:name];}
+  {id val = [defaults objectForKey:name]; \
+	  [dict setObject:val ? [NSNumber numberWithInt:[val intValue]] : [defaultValues() objectForKey:name] forKey:name];}
 
 + (NSDictionary *) preferencesFromDefaults
 {
