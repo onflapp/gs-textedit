@@ -23,6 +23,7 @@ TextEdit_LOCALIZED_RESOURCE_FILES= \
 	Document.gorm \
 	Edit.gorm \
 	FindPanel.gorm \
+	LinkPanel.gorm \
 	Info.gorm \
 	EncodingAccessory.gorm \
 	Preferences.gorm \
@@ -41,6 +42,7 @@ TextEdit_HEADER_FILES= \
 	MultiplePageView.h \
 	Preferences.h \
 	ScalingScrollView.h \
+	TextView.h \
 	TextFinder.h
 
 TextEdit_OBJC_FILES= \
@@ -50,6 +52,7 @@ TextEdit_OBJC_FILES= \
 	MultiplePageView.m \
 	Preferences.m \
 	ScalingScrollView.m \
+	TextView.m \
 	TextFinder.m
 
 TextEdit_OBJC_FILES += Edit_main.m

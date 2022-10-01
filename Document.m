@@ -36,19 +36,8 @@
 #import "Document.h"
 #import "MultiplePageView.h"
 #import "TextFinder.h"
+#import "TextView.h"
 #import "Preferences.h"
-
-@implementation NSTextView (LinkPanel)
-- (void) orderFrontLinkPanel:(id)sender
-{
-  NSAlert* alert = [[NSAlert alloc]init];
-  [alert setMessageText:@"ssss"];
-  [alert addButtonWithTitle:@"OK"];
-  [alert runModal];
-  [alert release];
-  NSLog(@"link panel");
-}
-@end
 
 @implementation Document
 
@@ -430,7 +419,7 @@
 
   [pagesView setNumberOfPages:numberOfPages + 1];
   textContainer = [[NSTextContainer alloc] initWithContainerSize:textSize];
-  textView = [[NSTextView alloc]
+  textView = [[TextView alloc]
                initWithFrame:[pagesView documentRectForPageNumber:numberOfPages]
                textContainer:textContainer];
 
@@ -484,7 +473,7 @@
   } else {
     NSSize		size = [scrollView contentSize];
     NSTextContainer	*textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(size.width, FLT_MAX)];
-    NSTextView		*textView = [[NSTextView alloc] initWithFrame:NSMakeRect(0.0, 0.0, size.width, size.height)
+    NSTextView		*textView = [[TextView alloc] initWithFrame:NSMakeRect(0.0, 0.0, size.width, size.height)
                                                         textContainer:textContainer];
 
     // Insert the single container as the first container in the layout manager
@@ -1145,6 +1134,16 @@ static BOOL hyphenationSupported(void)
 {
   if (!isDocumentEdited) {
     [self setDocumentEdited: YES];
+  }
+}
+
+- (void)   textView: (NSTextView *)view
+      clickedOnLink: (id)link
+            atIndex: (NSInteger) index 
+{
+  if (index < [[self textStorage]length]) {
+    NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+    [ws openURL:link];
   }
 }
 
