@@ -2,9 +2,10 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
+	    "changePlainTextFont:",
 	    "changeRichTextFont:",
 	    "miscChanged:",
-	    "changePlainTextFont:",
+	    "makeDefault:",
 	    "revert:"
 	);
 	Super = NSObject;
@@ -15,7 +16,8 @@
 	    "revert:",
 	    "ok:",
 	    "changeRichTextFont:",
-	    "changePlainTextFont:"
+	    "changePlainTextFont:",
+	    "makeDefault:"
 	);
 	Outlets = (
 	    deleteBackupMatrix,
@@ -27,7 +29,8 @@
 	    showPageBreakButton,
 	    tabWidthField,
 	    windowHeightField,
-	    windowWidthField
+	    windowWidthField,
+	    appendBOMButton
 	);
 	Super = NSObject;
     };

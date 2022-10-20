@@ -284,10 +284,10 @@ defaultPadding (void)
 
 - (BOOL) saveToPath: (NSString *)fileName encoding: (int)encoding updateFilenames: (BOOL)updateFileNamesFlag
 {
-  NSFileManager	*fileManager = [NSFileManager defaultManager];
-  NSDictionary	*curAttributes = [fileManager fileAttributesAtPath: fileName traverseLink: YES];
-  NSString		*actualFileNameToSave = [fileName stringByResolvingSymlinksInPath];	// follow links to save
-  BOOL			success = NO;
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSDictionary  *curAttributes = [fileManager fileAttributesAtPath: fileName traverseLink: YES];
+  NSString      *actualFileNameToSave = [fileName stringByResolvingSymlinksInPath];	// follow links to save
+  BOOL          success = NO;
 
   if (curAttributes) {	// If not nil, the file exists...
     NSString	*backupFileName = [actualFileNameToSave stringByAppendingString: @"~"];
@@ -301,27 +301,31 @@ defaultPadding (void)
       [fileManager movePath: actualFileNameToSave toPath: backupFileName handler: nil];
     }
   }
-	
+
   switch (encoding) {
   case RichTextWithGraphicsStringEncoding:
     success = [textStorage writeRTFDToFile: actualFileNameToSave updateFilenames: updateFileNamesFlag viewSize: [self viewSize] hyphenationFactor: [self hyphenationFactor]];
     break;
 
   case RichTextStringEncoding: {
-    NSData	*data = [textStorage RTFFromRange: NSMakeRange (0, [textStorage length]) viewSize: [self viewSize] hyphenationFactor: [self hyphenationFactor]];
+    NSData *data = [textStorage RTFFromRange: NSMakeRange (0, [textStorage length]) viewSize: [self viewSize] hyphenationFactor: [self hyphenationFactor]];
     success = data && [data writeToFile: actualFileNameToSave atomically: YES];
     break;
   }
 
   case NSUTF8StringEncoding: {
-    NSMutableData	*bom = [NSMutableData dataWithBytes: &utf8Marker length: sizeof (utf8Marker)];
-    NSData			*data = [[textStorage string] dataUsingEncoding: encoding];
+    NSData        *bom = [NSData dataWithBytes: &utf8Marker length: sizeof (utf8Marker)];
+    NSMutableData *buff = [[[NSMutableData alloc] init] autorelease];
+    NSData        *data = [[textStorage string] dataUsingEncoding: encoding];
 
     if (!data)
       break;
 
-    [bom appendData: data];
-    success = [bom writeToFile: actualFileNameToSave atomically: YES];
+    if ([[Preferences objectForKey: AppendBOM] boolValue])
+      [buff appendData: bom];
+
+    [buff appendData: data];
+    success = [buff writeToFile: actualFileNameToSave atomically: YES];
     break;
   }
 

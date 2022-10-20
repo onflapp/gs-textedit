@@ -7,6 +7,7 @@
 #define RichTextFont @"RichTextFont"
 #define PlainTextFont @"PlainTextFont"
 #define DeleteBackup @"DeleteBackup"
+#define AppendBOM @"AppendBOM"
 #define SaveFilesWritable @"SaveFilesWritable"
 #define RichText @"RichText"
 #define ShowPageBreaks @"ShowPageBreaks"
@@ -22,6 +23,7 @@
   // Save Options
   id	deleteBackupMatrix;
   id	saveFilesWritableButton;
+  id	appendBOMButton;
   // New Document Format
   id	richTextMatrix;
   id	showPageBreaksButton;
@@ -63,6 +65,7 @@
 - (void)revert:(id)sender;
 /* Calls commitUI to commit the displayed values as current */
 - (void)ok:(id)sender;
+- (void)makeDefault:(id)sender;
 - (void)revertToDefault:(id)sender;
 
 /* Action message for most of the misc items in the UI to get displayedValues */

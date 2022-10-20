@@ -19,18 +19,19 @@ static NSDictionary *defaultValues (void)
   if (!dict) {
     dict = [[NSDictionary alloc] initWithObjectsAndKeys:
                                [NSNumber numberWithBool:YES], DeleteBackup, 
+                               [NSNumber numberWithBool:NO], AppendBOM, 
                                [NSNumber numberWithBool:NO], SaveFilesWritable, 
                                [NSNumber numberWithBool:YES], RichText, 
                                [NSNumber numberWithBool:NO], ShowPageBreaks,
                                [NSNumber numberWithBool:NO], OpenPanelFollowsMainWindow,
-				[NSNumber numberWithInt:80], WindowWidth, 
-				[NSNumber numberWithInt:30], WindowHeight, 
-				[NSNumber numberWithInt:UnknownStringEncoding], PlainTextEncoding,
-				[NSNumber numberWithInt:8], TabWidth,
-				[NSNumber numberWithInt:100000], ForegroundLayoutToIndex,		
-                       [NSFont userFixedPitchFontOfSize:0.0], PlainTextFont, 
-                                 [NSFont userFontOfSize:0.0], RichTextFont, 
-                                 nil];
+                               [NSNumber numberWithInt:80], WindowWidth, 
+                               [NSNumber numberWithInt:30], WindowHeight, 
+                               [NSNumber numberWithInt:UnknownStringEncoding], PlainTextEncoding,
+                               [NSNumber numberWithInt:8], TabWidth,
+                               [NSNumber numberWithInt:100000], ForegroundLayoutToIndex,		
+                               [NSFont userFixedPitchFontOfSize:0.0], PlainTextFont, 
+                               [NSFont userFontOfSize:0.0], RichTextFont, 
+                               nil];
   }
   return dict;
 }
@@ -125,6 +126,7 @@ static void showFontInField(NSFont *font, NSTextField *field)
   showFontInField ([displayedValues objectForKey:PlainTextFont], plainTextFontNameField);
   [deleteBackupMatrix selectCellWithTag:[[displayedValues objectForKey:DeleteBackup] boolValue] ? 1 : 0];
   [saveFilesWritableButton setState: [[displayedValues objectForKey: SaveFilesWritable] boolValue]];
+  [appendBOMButton setState: [[displayedValues objectForKey: AppendBOM] boolValue]];
   [richTextMatrix selectCellWithTag: [[displayedValues objectForKey: RichText] boolValue] ? 1 : 0];
   [showPageBreaksButton setState: [[displayedValues objectForKey: ShowPageBreaks] boolValue]];
 
@@ -137,10 +139,10 @@ static void showFontInField(NSFont *font, NSTextField *field)
 /* Gets everything from UI except for fonts... */
 - (void)miscChanged:(id)sender
 {
-  static NSNumber	*yes = nil;
-  static NSNumber	*no = nil;
-  int			anInt;
-	
+  static NSNumber  *yes = nil;
+  static NSNumber  *no = nil;
+  int              anInt;
+
   if (!yes) {
     yes = [[NSNumber alloc] initWithBool:YES];
     no = [[NSNumber alloc] initWithBool:NO];
@@ -152,6 +154,8 @@ static void showFontInField(NSFont *font, NSTextField *field)
                       forKey:RichText];
   [displayedValues setObject:([saveFilesWritableButton state] ? yes : no)
                       forKey:SaveFilesWritable];
+  [displayedValues setObject:([appendBOMButton state] ? yes : no)
+                      forKey:AppendBOM];
   [displayedValues setObject:([showPageBreaksButton state] ? yes : no)
                       forKey:ShowPageBreaks];
   [displayedValues setObject:[NSNumber numberWithInt:[[plainTextEncodingPopup selectedItem] tag]]
@@ -235,6 +239,11 @@ static BOOL changingRTFFont = NO;
 - (void)ok:(id)sender
 {
   [self commitDisplayedValues];
+}
+
+- (void)makeDefault:(id)sender
+{
+  [self commitDisplayedValues];
   [Preferences saveDefaults];
 }
 
@@ -267,6 +276,7 @@ static BOOL changingRTFFont = NO;
 
 	getBoolDefault (RichText);
 	getBoolDefault (DeleteBackup);
+	getBoolDefault (AppendBOM);
 	getBoolDefault (ShowPageBreaks);
 	getBoolDefault (SaveFilesWritable);
 	getBoolDefault (OpenPanelFollowsMainWindow);
@@ -293,6 +303,7 @@ static BOOL changingRTFFont = NO;
 
 	setBoolDefault (RichText);
 	setBoolDefault (DeleteBackup);
+	setBoolDefault (AppendBOM);
 	setBoolDefault (ShowPageBreaks);
 	setBoolDefault (SaveFilesWritable);
 	setBoolDefault (OpenPanelFollowsMainWindow);
