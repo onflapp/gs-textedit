@@ -321,8 +321,9 @@ defaultPadding (void)
     if (!data)
       break;
 
-    if ([[Preferences objectForKey: AppendBOM] boolValue])
+    if ([[Preferences objectForKey: AppendBOM] boolValue]) {
       [buff appendData: bom];
+    }
 
     [buff appendData: data];
     success = [buff writeToFile: actualFileNameToSave atomically: YES];

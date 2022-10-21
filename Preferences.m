@@ -42,7 +42,8 @@ static Preferences *sharedInstance = nil;
 
 + (id)objectForKey:(id)key
 {
-  return [[[self sharedInstance] preferences] objectForKey:key];
+  id prefs = [[self sharedInstance] preferences];
+  return [prefs objectForKey:key];
 }
 
 + (void)saveDefaults
@@ -239,6 +240,7 @@ static BOOL changingRTFFont = NO;
 - (void)ok:(id)sender
 {
   [self commitDisplayedValues];
+  [[richTextFontNameField window] orderOut:self];
 }
 
 - (void)makeDefault:(id)sender
