@@ -14,11 +14,20 @@
 #import <Foundation/NSFileManager.h>
 #import <AppKit/NSApplication.h>
 
+#import "STScriptingSupport.h"
+
 #import "Controller.h"
 #import "Document.h"
 #import "Preferences.h"
 
 @implementation Controller
+
+- (void) applicationDidFinishLaunching: (NSNotification *)aNotif
+{
+  if([NSApp isScriptingSupported]) {
+    [NSApp initializeApplicationScripting];
+  }
+}
 
 /* 
    If return type is not the same as in AppKit/NSApplication.h runtime
@@ -198,6 +207,22 @@
    */
   NSMenu *f =[[[[[NSApp mainMenu] itemWithTitle:@"Format"] submenu] itemWithTitle:@"Font"] submenu];
   [[NSFontManager sharedFontManager] setFontMenu:f];
+}
+
+- (NSArray*) documents
+{
+  NSMutableArray* ls = [NSMutableArray array];
+  for (NSWindow* win in [NSApp windows]) {
+    if ([[win delegate] isKindOfClass: [Document class]]) {
+      [ls addObject:[win delegate]];
+    }
+  }
+  return ls;
+}
+
+- (Document*) currentDocument 
+{
+  return [[self documents] firstObject];
 }
 
 @end

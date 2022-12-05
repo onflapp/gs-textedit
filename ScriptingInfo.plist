@@ -1,0 +1,12 @@
+{
+  Classes =
+  (
+    Document,
+    Controller
+  );
+  Objects =
+  {
+    currentDocument = "currentDocument";
+    documents = "documents";
+  };
+}

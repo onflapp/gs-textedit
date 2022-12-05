@@ -15,6 +15,7 @@ TextEdit_RESOURCE_FILES= \
 	Edit.tiff \
 	EditTitle.tiff \
 	Encodings.txt \
+	ScriptingInfo.plist \
 	rtf.tiff \
 	rtfd.tiff \
 	text.tiff
@@ -48,12 +49,14 @@ TextEdit_HEADER_FILES= \
 TextEdit_OBJC_FILES= \
 	Controller.m \
 	Document.m \
+	Document+scripting.m \
 	DocumentReadWrite.m \
 	MultiplePageView.m \
 	Preferences.m \
 	ScalingScrollView.m \
 	TextView.m \
-	TextFinder.m
+	TextFinder.m \
+	STScriptingSupport.m
 
 TextEdit_OBJC_FILES += Edit_main.m
 
