@@ -27,6 +27,7 @@ extern void SetUpEncodingPopupButton(NSPopUpButton *popup, int selectedEncoding,
 @interface Document : NSObject
 {
   NSTextStorage *textStorage;
+  int	           documentEncoding;
   NSString      *documentName;		 /* If nil, never saved */
   NSScrollView  *scrollView;		 /* ScrollView containing document */
   NSPrintInfo   *printInfo;		 /* PrintInfo, used when hasMultiplePages is true */

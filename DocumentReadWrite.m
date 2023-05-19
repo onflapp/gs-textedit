@@ -228,6 +228,7 @@ defaultPadding (void)
           [textStorage release];
           textStorage = newTextStorage;
           success = YES;
+          documentEncoding = encoding;
         }
     }
   else
@@ -256,6 +257,7 @@ defaultPadding (void)
                   [[self layoutManager] replaceTextStorage:newTextStorage];
                   [textStorage release];
                   textStorage = newTextStorage;
+                  documentEncoding = encoding;
                   success = YES;
                 }
             }
@@ -272,6 +274,7 @@ defaultPadding (void)
                   [textStorage endEditing];
                   [fileContents release];
                   encodingIfPlainText = encoding;
+                  documentEncoding = encoding;
                   success = YES;
                 }
             }

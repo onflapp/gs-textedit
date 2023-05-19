@@ -794,6 +794,13 @@ static BOOL hyphenationSupported(void)
   [self saveDocument: NO];
 }
 
+- (void) reread:(id)sender
+{
+  if (documentName && !isDocumentEdited) {
+    [self loadFromPath:documentName encoding:documentEncoding];
+    [[self firstTextView] setSelectedRange:NSMakeRange(0, 0)];
+  }
+}
 
 - (void) chooseAndAttachFiles:(id)sender 
 {
