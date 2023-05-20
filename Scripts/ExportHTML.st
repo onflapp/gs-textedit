@@ -121,9 +121,12 @@ _printLine_ := [ :attr :text |
 _process_file_ := [ :path |
     Transcript showLine:('processing ',path).
 
-    title := path lastPathComponent.
+    d     := NSNumber pointerForObject.
     astr  := (NSAttributedString  alloc) 
-              initWithPath:path documentAttributes:nil.
+              initWithPath:path documentAttributes:d.
+
+    dattr := d objectValue.
+    title := path lastPathComponent stringByDeletingPathExtension.
 
     i    := 0.
     sz   := astr length.
@@ -178,7 +181,7 @@ ifTrue: [
     html writeToFile:pout atomically:NO.
     Transcript showLine:('wrote to ',pout).
 
-    NSWorkspace sharedWorkspace openFile:out.
+    NSWorkspace sharedWorkspace openFile:pout.
 ]
 ifFalse: [
     Transcript showLine:'exit'.
