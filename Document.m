@@ -1158,13 +1158,21 @@ static BOOL hyphenationSupported(void)
 doubleClickedOnCell: (id <NSTextAttachmentCell>)cell
              inRect: (NSRect)rect
 {
-  NSString	*name = [[[cell attachment] fileWrapper] filename];
-  BOOL		success = NO;
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSString      *name = [[[[cell attachment] fileWrapper] filename] lastPathComponent];
+  BOOL	        success = NO;
 
-  if (!name) name = [[[cell attachment] fileWrapper] preferredFilename];
+  if (!name)    name = [[[cell attachment] fileWrapper] preferredFilename];
 
   if (name && documentName && ![name isEqualToString: @""] && ![documentName isEqualToString:@""]) {
     NSString	*fullPath = [documentName stringByAppendingPathComponent:name];
+
+    if (![fm fileExistsAtPath: fullPath]) {
+      NSRunAlertPanel (_(@"Unable to open attachement"), 
+                       _(@"Did you save this document first?"), 
+                       _(@"OK"), nil, nil);
+      return;
+    }
 
     success = [[NSWorkspace sharedWorkspace] openFile: fullPath];
   }
