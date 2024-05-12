@@ -1137,11 +1137,18 @@ static BOOL hyphenationSupported(void)
 //============================================================================ 
 //   Text view delegation messages
 //============================================================================
-- (void) textDidChange:(NSNotification *)textObject
+- (void) textDidChange:(NSNotification *)aNot
 {
   if (!isDocumentEdited) {
     [self setDocumentEdited: YES];
   }
+}
+
+- (void) textViewDidChangeSelection:(NSNotification *)aNot
+{
+  NSTextView *tview = [aNot object];
+  if ([tview selectedRange].length > 0) isSelecting = YES;
+  else isSelecting = NO;
 }
 
 - (void)   textView: (NSTextView *)view
@@ -1461,6 +1468,25 @@ validateToggleItem (NSMenuItem *aCell, BOOL useFirst,
       [((NSMenu *)[[(NSCell *)aCell controlView] window]) sizeToFit];
 #endif
     }
+  }
+}
+
+- (id)validRequestorForSendType:(NSString *)st
+                     returnType:(NSString *)rt {
+  if (!isSelecting && [documentName length]) {
+    if ([st isEqual:NSFilenamesPboardType]) return self;
+  }
+  return nil;
+}
+
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pb
+                             types:(NSArray *)types {
+  if (!isSelecting && [documentName length]) {
+    [pb declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:nil];
+    [pb setPropertyList:[NSArray arrayWithObject:documentName] forType:NSFilenamesPboardType];
+    return YES;
+  } else {
+    return NO;
   }
 }
 

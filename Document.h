@@ -36,6 +36,7 @@ extern void SetUpEncodingPopupButton(NSPopUpButton *popup, int selectedEncoding,
   BOOL	isDocumentEdited;
   BOOL	hasMultiplePages;
   BOOL	isRichText;
+  BOOL  isSelecting;
   int	encodingIfPlainText;
 }
 
