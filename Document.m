@@ -1476,6 +1476,11 @@ validateToggleItem (NSMenuItem *aCell, BOOL useFirst,
   if (!isSelecting && [documentName length]) {
     if ([st isEqual:NSFilenamesPboardType]) return self;
   }
+  
+  if ([rt isEqual:NSTIFFPboardType]) {
+    return self;
+  }
+
   return nil;
 }
 
