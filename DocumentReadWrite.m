@@ -266,6 +266,23 @@ defaultPadding (void)
               NSString *fileContents = [[NSString alloc] initWithData:fileContentsAsData 
                                                              encoding:encoding];
 
+              if (!fileContents)
+                {
+                  NSLog(@"try to to guess encoding");
+                  NSStringEncoding enc;
+                  NSError *error = nil;
+                  fileContents = [[NSString alloc] initWithContentsOfFile:fileName 
+                                                             usedEncoding:&enc 
+                                                                    error:&error];
+                }
+
+              if (!fileContents)
+                {
+                  NSLog(@"force latin1");
+                  fileContents = [[NSString alloc] initWithData:fileContentsAsData 
+                                                       encoding:NSISOLatin1StringEncoding];
+                }
+
               if (fileContents)
                 {
                   [textStorage beginEditing];
