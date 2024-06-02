@@ -64,6 +64,8 @@
     return nil;
   }
 
+  fileObserver = [[FileObserver alloc] initWithDelegate:self];
+
   layoutManager = [[NSLayoutManager alloc] init];
   [textStorage addLayoutManager:layoutManager];
   [layoutManager setDelegate:self];
@@ -219,6 +221,7 @@
   [documentName release];
   [textStorage release];
   [printInfo release];
+  [fileObserver release];
   [super dealloc];
 }
 
@@ -1120,6 +1123,11 @@ static BOOL hyphenationSupported(void)
   }
 }
 
+- (void) observedFileModifiedAtPath:(NSString*) path
+{
+  [self reread:self];
+}
+
 /* Window delegation messages */
 
 - (BOOL) windowShouldClose:(id)sender
@@ -1182,6 +1190,7 @@ doubleClickedOnCell: (id <NSTextAttachmentCell>)cell
     }
 
     success = [[NSWorkspace sharedWorkspace] openFile: fullPath];
+    [fileObserver observeFile: fullPath];
   }
 
   if (!success) {

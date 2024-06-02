@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "FileObserver.h"
 
 @class NSTextView;
 @class NSTextStorage;
@@ -32,6 +33,8 @@ extern void SetUpEncodingPopupButton(NSPopUpButton *popup, int selectedEncoding,
   NSScrollView  *scrollView;		 /* ScrollView containing document */
   NSPrintInfo   *printInfo;		 /* PrintInfo, used when hasMultiplePages is true */
   NSString      *potentialSaveDirectory; /* if non-nil, is path prefix where to save it. */
+
+  FileObserver  *fileObserver;
   
   BOOL	isDocumentEdited;
   BOOL	hasMultiplePages;

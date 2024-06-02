@@ -45,7 +45,8 @@ TextEdit_HEADER_FILES= \
 	Preferences.h \
 	ScalingScrollView.h \
 	TextView.h \
-	TextFinder.h
+	TextFinder.h \
+	FileObserver.h
 
 TextEdit_OBJC_FILES= \
 	Controller.m \
@@ -57,6 +58,7 @@ TextEdit_OBJC_FILES= \
 	ScalingScrollView.m \
 	TextView.m \
 	TextFinder.m \
+	FileObserver.m \
 	STScriptingSupport.m
 
 TextEdit_OBJC_FILES += Edit_main.m
