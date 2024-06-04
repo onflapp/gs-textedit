@@ -27,6 +27,7 @@ TextEdit_LOCALIZED_RESOURCE_FILES= \
 	FindPanel.gorm \
 	LinkPanel.gorm \
 	Info.gorm \
+	StylesPanel.gorm \
 	EncodingAccessory.gorm \
 	Preferences.gorm \
 	FindPanel.strings \
@@ -46,6 +47,7 @@ TextEdit_HEADER_FILES= \
 	ScalingScrollView.h \
 	TextView.h \
 	TextFinder.h \
+	StylesPanel.h \
 	FileObserver.h
 
 TextEdit_OBJC_FILES= \
@@ -58,6 +60,7 @@ TextEdit_OBJC_FILES= \
 	ScalingScrollView.m \
 	TextView.m \
 	TextFinder.m \
+	StylesPanel.m \
 	FileObserver.m \
 	STScriptingSupport.m
 

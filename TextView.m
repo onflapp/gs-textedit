@@ -47,4 +47,27 @@
   [linkPanel orderOut:self];
 }
 
+- (void) orderFrontStylesPanel:(id)sender
+{
+  [[StylesPanel sharedInstance] orderFrontStylesPanel: sender];
+}
+
+- (void) performStylesPanelAction:(id)sender
+{
+  NSRange s = [self selectedRange];
+  NSRange r = {0, 0};
+  if ([sender tag] == 10 && s.length > 0) {
+    NSDictionary* dict = [[self textStorage]attributesAtIndex:s.location effectiveRange:&r];
+    [[StylesPanel sharedInstance] setSelectedStyle: dict];
+  }
+  if ([sender tag] == 20) {
+    NSDictionary* dict = [[StylesPanel sharedInstance] selectedStyle];
+    if (dict && s.length > 0) {
+      [[self textStorage] setAttributes:dict range:s];
+    }
+    else if (dict) {
+      [self setTypingAttributes:dict];
+    }
+  }
+}
 @end

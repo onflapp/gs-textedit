@@ -1,0 +1,21 @@
+{
+    "## Comment" = "Do NOT change this file, Gorm maintains it";
+    FirstResponder = {
+	Actions = (
+	    "performStylesPanelAction:",
+	    "orderFrontStylesPanel:"
+	);
+	Super = NSObject;
+    };
+    StylesPanel = {
+	Actions = (
+	    "orderFrontStylesPanel:",
+	    "performStylesPanelAction:"
+	);
+	Outlets = (
+	    panel,
+	    stylesList
+	);
+	Super = NSObject;
+    };
+}

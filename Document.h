@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import "FileObserver.h"
+#import "StylesPanel.h"
 
 @class NSTextView;
 @class NSTextStorage;
