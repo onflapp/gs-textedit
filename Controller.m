@@ -19,6 +19,7 @@
 #import "Controller.h"
 #import "Document.h"
 #import "Preferences.h"
+#import "StylesPanel.h"
 
 @implementation Controller
 
@@ -27,6 +28,8 @@
   if([NSApp isScriptingSupported]) {
     [NSApp initializeApplicationScripting];
   }
+
+  [[StylesPanel sharedInstance] setStylesMenu:[stylesMenu submenu]];
 }
 
 /* 

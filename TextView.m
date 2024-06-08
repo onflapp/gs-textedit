@@ -56,11 +56,20 @@
 {
   NSRange s = [self selectedRange];
   NSRange r = {0, 0};
-  if ([sender tag] == 10 && s.length > 0) {
+  if ([sender tag] == 10 && s.length > 0) { /* set style from the selection */
     NSDictionary* dict = [[self textStorage]attributesAtIndex:s.location effectiveRange:&r];
     [[StylesPanel sharedInstance] setSelectedStyle: dict];
   }
-  if ([sender tag] == 20) {
+  else if ([sender tag] == 30) { /* clear styles */
+    NSDictionary* dict = [NSDictionary dictionary];
+    if (dict && s.length > 0) {
+      [[self textStorage] setAttributes:dict range:s];
+    }
+    else if (dict) {
+      [self setTypingAttributes:dict];
+    }
+  }
+  else { /* apply styles */
     NSDictionary* dict = [[StylesPanel sharedInstance] selectedStyle];
     if (dict && s.length > 0) {
       [[self textStorage] setAttributes:dict range:s];
@@ -70,4 +79,25 @@
     }
   }
 }
+
+- (void) changeFontSize:(id)sender
+{
+  NSRange s = [self selectedRange];
+  NSRange r = {0, 0};
+
+  if (s.length == 0) return;
+
+  NSDictionary* dict = [[self textStorage]attributesAtIndex:s.location effectiveRange:&r];
+  NSFont* font = [dict valueForKey:@"NSFont"];
+ 
+  if (([sender tag] < 0 && [font pointSize] > 5) || [sender tag] > 0) {
+    font = [[NSFontManager sharedFontManager] convertFont:font 
+                                                   toSize:[font pointSize] + [sender tag]];
+
+    dict = [dict mutableCopy];
+    [dict setValue:font forKey:@"NSFont"];
+    [[self textStorage] setAttributes:dict range:s];
+  }
+}
+
 @end

@@ -5,10 +5,12 @@
   IBOutlet NSTableView* stylesList;
 
   NSMutableArray* styles;
+  NSMenu* stylesMenu;
 }
 
 + (id) sharedInstance;
 - (void) orderFrontStylesPanel:(id)sender;
+- (void) setStylesMenu:(NSMenu*) menu;
 - (void) setSelectedStyle:(NSDictionary*) style;
 - (NSDictionary*) selectedStyle;
 @end

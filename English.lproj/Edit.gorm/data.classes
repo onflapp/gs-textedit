@@ -9,6 +9,7 @@
 	    "applicationShouldTerminate:"
 	);
 	Outlets = (
+	    stylesMenu
 	);
 	Super = NSObject;
     };
@@ -21,10 +22,11 @@
 	    "findNext:",
 	    "findPrevious:",
 	    "jumpToSelection:",
-	    "orderFrontStylesPanel:",
+	    "changeFontSize:",
 	    "orderFrontFindPanel:",
 	    "orderFrontFontPanel:",
 	    "orderFrontLinkPanel:",
+	    "orderFrontStylesPanel:",
 	    "reread:",
 	    "revert:",
 	    "save:",

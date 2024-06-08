@@ -3,6 +3,7 @@
 @interface Controller: NSObject
 {
   id infoPanel;
+  id stylesMenu;
 }
 
 /* NSApplication delegate methods */

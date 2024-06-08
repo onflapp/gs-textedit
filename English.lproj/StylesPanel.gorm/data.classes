@@ -2,15 +2,19 @@
     "## Comment" = "Do NOT change this file, Gorm maintains it";
     FirstResponder = {
 	Actions = (
-	    "performStylesPanelAction:",
-	    "orderFrontStylesPanel:"
+	    "addStyle:",
+	    "removeStyle:",
+	    "orderFrontStylesPanel:",
+	    "performStylesPanelAction:"
 	);
 	Super = NSObject;
     };
     StylesPanel = {
 	Actions = (
 	    "orderFrontStylesPanel:",
-	    "performStylesPanelAction:"
+	    "performStylesPanelAction:",
+	    "addStyle:",
+	    "removeStyle:"
 	);
 	Outlets = (
 	    panel,

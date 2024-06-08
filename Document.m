@@ -39,7 +39,14 @@
 #import "TextView.h"
 #import "Preferences.h"
 
+static NSWindow* _lastMainWindow;
+
 @implementation Document
+
++ (Document*) lastActiveDocument 
+{
+  return (Document*)[_lastMainWindow delegate];
+}
 
 - (void)setupInitialTextViewSharedState
 {
@@ -173,7 +180,7 @@
   if (document) {
     [document setPotentialSaveDirectory:[Document openSavePanelDirectory]];
     [document setDocumentName:nil];
-    [[document window] makeKeyAndOrderFront:nil];
+    [document showWindow];
     return YES;
   }
   else {
@@ -192,11 +199,36 @@
   if (document) {
     [document doForegroundLayoutToCharacterIndex:
                       [[Preferences objectForKey:ForegroundLayoutToIndex] intValue]];
-    [[document window] makeKeyAndOrderFront:nil];
+    [document showWindow];
     return YES;
   } 
   else {
     return NO;
+  }
+}
+
+- (void) showWindow 
+{
+  NSWindow* window = [self window];
+  if ([window isVisible]) {
+    [window makeKeyAndOrderFront:self];
+  }
+  else {
+    [window makeFirstResponder:[self firstTextView]];
+
+    if (!_lastMainWindow) _lastMainWindow = [[NSApp orderedWindows] lastObject];
+    if (_lastMainWindow) {
+      NSRect r = [_lastMainWindow frame];
+      r.origin.x += 24;
+
+      [window setFrame:r display:NO];
+    }
+    else {
+      [window setFrameUsingName:@"document_window"];
+      [window setFrameAutosaveName:@"document_window"];
+    }
+
+    [window makeKeyAndOrderFront:self];
   }
 }
 
@@ -1130,6 +1162,11 @@ static BOOL hyphenationSupported(void)
 
 /* Window delegation messages */
 
+- (void) windowDidBecomeMain:(NSNotification *)notification 
+{
+  _lastMainWindow = [self window];
+}
+
 - (BOOL) windowShouldClose:(id)sender
 {
   return [self canCloseDocument];
@@ -1138,6 +1175,9 @@ static BOOL hyphenationSupported(void)
 - (void) windowWillClose:(NSNotification *)notification
 {
   NSWindow	*window = [self window];
+  
+  if (_lastMainWindow == window) _lastMainWindow = nil;
+
   [window setDelegate: nil];
   [self release];
 }
